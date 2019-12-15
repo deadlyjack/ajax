@@ -13,7 +13,7 @@ interface ajaxOptions {
   xhr: (xhr: XMLHttpRequest) => void;
 }
 
-declare module "ajax-js" {
+declare module "@deadlyjack/ajax" {
   function ajax(options: ajaxOptions): XMLHttpRequest | object;
   export default ajax;
 }
