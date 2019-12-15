@@ -1,0 +1,12 @@
+{
+  "name": "ajax-js",
+  "version": "1.0.0",
+  "main": "./src/ajax.js",
+  "license": "MIT",
+  "keywords": ["ajax", "xmlhttprequest", "xhr"],
+  "author": {
+    "name": "Ajit Kumar",
+    "url": "https://foxdebug.com",
+    "email": "ajit@foxdebug.com"
+  }
+}
