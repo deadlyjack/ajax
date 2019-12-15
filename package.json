@@ -1,9 +1,13 @@
 {
   "name": "@deadlyjack/ajax",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "main": "./src/ajax.js",
   "license": "MIT",
-  "keywords": ["ajax", "xmlhttprequest", "xhr"],
+  "keywords": [
+    "ajax",
+    "xmlhttprequest",
+    "xhr"
+  ],
   "author": {
     "name": "Ajit Kumar",
     "url": "https://foxdebug.com",
