@@ -1,5 +1,5 @@
 {
-  "name": "ajax-js",
+  "name": "xhr-js",
   "version": "1.0.0",
   "main": "./src/ajax.js",
   "license": "MIT",
