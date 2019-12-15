@@ -14,6 +14,6 @@ interface ajaxOptions {
 }
 
 declare module "@deadlyjack/ajax" {
-  function ajax(options: ajaxOptions): XMLHttpRequest | object;
+  function ajax(options: ajaxOptions): Promise<XMLHttpRequest | object>;
   export default ajax;
 }
