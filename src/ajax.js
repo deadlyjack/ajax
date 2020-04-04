@@ -40,7 +40,7 @@ function ajax(options) {
 
         xhr.open(method, url, true);
         xhr.responseType = options.responseType;
-        xhr.setRequestHeader("Content-Type", contentType);
+        if (contentType) xhr.setRequestHeader("Content-Type", contentType);
         if (options.xhr) options.xhr(xhr);
         xhr.send(data);
 
