@@ -5,7 +5,7 @@
  * @param {"get"|"post"|"delete"|"patch"|string} [options.method] method of the request
  * @param {object} [options.data] request data
  * @param {"html"|"json"|"svg"|"text"|"xml"|"arraybuffer"|"document"} [options.responseType] response type
- * @param {"application/json"|"application/x-www-form-urlencoded"} [options.contentType] reqruest content type
+ * @param {"application/json"|"application/x-www-form-urlencoded"|"multipart/form-data"} [options.contentType] reqruest content type
  * @param {function(response):void} [options.onsuccess] callback function
  * @param {function(response):void} [options.onload]  callback function
  * @param {function} [options.onloadend]  callbackfunction
@@ -22,7 +22,7 @@ function ajax(options) {
     return new Promise((resolve, reject) => {
         options = options || {};
 
-        const contentType = options.contentType === undefined ? 'application/x-www-form-urlencoded' : options.contentType;
+        const contentType = options.contentType;
         const method = options.method === undefined ? 'get' : options.method;
         const url = options.url;
 
@@ -39,9 +39,9 @@ function ajax(options) {
         }
 
         xhr.open(method, url, true);
-        if (options.xhr) options.xhr(xhr);
         xhr.responseType = options.responseType;
         xhr.setRequestHeader("Content-Type", contentType);
+        if (options.xhr) options.xhr(xhr);
         xhr.send(data);
 
         xhr.onerror = function (e) {

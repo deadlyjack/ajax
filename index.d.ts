@@ -3,7 +3,7 @@ interface ajaxOptions {
   method: "get" | "post" | "delete" | "patch" | string;
   data: object,
   responseType: "html" | "json" | "svg" | "text" | "xml" | "arraybuffer" | "document";
-  contentType: "application/json" | "application/x-www-form-urlencoded";
+  contentType: "application/json" | "application/x-www-form-urlencoded" | "multipart/form-data";
   response: boolean;
   serialize: boolean;
   onsuccess: (xhr: Object) => void;
