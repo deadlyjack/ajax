@@ -1,6 +1,6 @@
 {
   "name": "@deadlyjack/ajax",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "main": "./src/ajax.js",
   "license": "MIT",
   "keywords": [
