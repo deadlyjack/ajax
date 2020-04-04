@@ -22,7 +22,7 @@ function ajax(options) {
     return new Promise((resolve, reject) => {
         options = options || {};
 
-        const contentType = options.contentType || 'application/x-www-form-urlencoded';
+        const contentType = options.contentType === undefined ? 'application/x-www-form-urlencoded' : null;
         const method = options.method === undefined ? 'get' : options.method;
         const url = options.url;
 
