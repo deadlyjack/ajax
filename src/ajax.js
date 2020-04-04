@@ -93,6 +93,7 @@ function ajax(options) {
      * @param {object} data 
      */
     function serialize(data) {
+        if (!data) return;
         const keys = Object.keys(data);
         let serial = "";
         keys.map((key, index) => {
