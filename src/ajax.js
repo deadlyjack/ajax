@@ -32,7 +32,7 @@ function ajax(options) {
         options.onload = options.onload || callback;
         options.onerror = options.onerror || callback;
 
-        let data = options.data && serialize(options.data);
+        let data = options.serialize ? serialize(options.data) : options.data;
 
         if (options.data && contentType === 'application/json') {
             data = JSON.stringify(options.data);
@@ -47,7 +47,7 @@ function ajax(options) {
         xhr.onerror = function (e) {
             if (options.onerror) options.onerror(e);
             reject(e);
-        }
+        };
 
         if (options.onloadend) {
             xhr.addEventListener('loadend', options.onloadend);
