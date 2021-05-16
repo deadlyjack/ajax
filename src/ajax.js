@@ -15,7 +15,7 @@
  * @param {boolean} [options.serialize = true] serialize object or not
  * @returns {Promise<XMLHttpRequest|Object>}
  */
-function ajax(options) {
+export function ajax(options) {
     const xhr = getHTTP();
     const response = options.response === undefined ? true : options.response;
 
@@ -107,5 +107,3 @@ function ajax(options) {
         return param;
     }
 }
-
-export default ajax;
