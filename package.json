@@ -1,7 +1,7 @@
 {
   "name": "@deadlyjack/ajax",
   "version": "1.0.7",
-  "main": "./src/ajax.js",
+  "main": "./dist/ajax.js",
   "license": "MIT",
   "keywords": [
     "ajax",
@@ -12,5 +12,23 @@
     "name": "Ajit Kumar",
     "url": "https://foxdebug.com",
     "email": "ajit@foxdebug.com"
+  },
+  "bugs": {
+    "url": "https://github.com/deadlyjack/ajax.git/issues"
+  },
+  "homepage": "https://github.com/deadlyjack/ajax.git#readme",
+  "devDependencies": {
+    "@babel/core": "^7.4.3",
+    "@babel/preset-env": "^7.4.3",
+    "babel-loader": "^8.0.5",
+    "webpack": "^4.30.0",
+    "webpack-cli": "^3.3.0"
+  },
+  "browserslist": [
+    ">99%",
+    "last 2 versions"
+  ],
+  "scripts": {
+    "build": "webpack"
   }
 }
