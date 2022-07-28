@@ -1,19 +1,5 @@
-/**
- * 
- * @param {object} [options]
- * @param {string} [options.url] URL
- * @param {"get"|"post"|"delete"|"patch"|"put"|"purge"} [options.method] method of the request
- * @param {object} [options.data] request data
- * @param {"html"|"json"|"svg"|"text"|"xml"|"arraybuffer"|"document"} [options.responseType] response type
- * @param {"application/json"|"application/x-www-form-urlencoded"|"multipart/form-data"} [options.contentType] reqruest content type
- * @param {function(response):void} [options.onsuccess] callback function
- * @param {function(response):void} [options.onload]  callback function
- * @param {function} [options.onloadend]  callbackfunction
- * @param {function(xhr):void} [options.xhr] configure xhr object
- * @param {function(err):void} [options.onerror] callback function
- * @param {boolean} [options.serialize = true] serialize object or not
- * @returns {options.response ? object : XMLHttpRequest}
- */
+let timeout = null;
+const progresses = [];
 export function ajax(options) {
     const xhr = getHTTP();
 
@@ -40,6 +26,28 @@ export function ajax(options) {
         xhr.responseType = options.responseType;
         xhr.setRequestHeader("Content-Type", contentType);
         if (options.xhr) options.xhr(xhr);
+
+        xhr.onprogress = (e) => {
+            const { loaded, total } = e;
+
+            if (typeof options.onprogress === 'function') {
+                options.onprogress(loaded, total);
+            }
+
+            if (typeof ajax.onprogress === 'function') {
+                const percent = Math.floor(loaded / total * 100);
+                progresses.push(percent);
+                if (timeout) return;
+
+                timeout = setTimeout(() => {
+                    timeout = null;
+                    ajax.onprogress(Math.min(...progresses));
+                    progresses.length = 0;
+                }, 3000);
+            }
+
+        }
+
         xhr.send(data);
 
         xhr.onerror = function (e) {
@@ -106,55 +114,49 @@ export function ajax(options) {
     }
 }
 
-ajax.get = function (url, data, options = {}) {
+ajax.get = function (url, options = {}) {
     return ajax({
         url,
-        data,
         method: 'get',
         ...options
     });
 }
 
-ajax.post = function (url, data, options = {}) {
+ajax.post = function (url, options = {}) {
     return ajax({
         url,
-        data,
         method: 'post',
         ...options
     });
 }
 
-ajax.put = function (url, data, options = {}) {
+ajax.put = function (url, options = {}) {
     return ajax({
         url,
-        data,
         method: 'put',
         ...options
     });
 }
 
-ajax.patch = function (url, data, options = {}) {
+ajax.patch = function (url, options = {}) {
     return ajax({
         url,
-        data,
         method: 'patch',
         ...options
     });
 }
 
-ajax.delete = function (url, data, options = {}) {
+ajax.delete = function (url, options = {}) {
     return ajax({
         url,
-        data,
         method: 'delete',
         ...options
     });
 }
 
-ajax.purge = function (url, data, options = {}) {
+ajax.purge = function (url, options = {}) {
     return ajax({
         url,
-        data,
         method: 'purge',
         ...options
     });

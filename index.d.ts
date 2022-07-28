@@ -23,6 +23,7 @@ declare module '@deadlyjack/ajax' {
     onload: (xhr: XMLHttpRequest) => void;
     onerror: (xhr: XMLHttpRequest) => void;
     onloadend: (xhr: XMLHttpRequest) => void;
+    onprogress: (progress: number, total: number) => void;
     xhr: (xhr: XMLHttpRequest) => void;
   }
   interface Ajax {
@@ -34,6 +35,10 @@ declare module '@deadlyjack/ajax' {
     put(url: string, data?: AjaxOptions): Promise<XMLHttpRequest | object>;
     purge(url: string, data?: AjaxOptions): Promise<XMLHttpRequest | object>;
     head(url: string, data?: AjaxOptions): Promise<XMLHttpRequest | object>;
+    /**
+     * A callback function with parameter progress i.e. percentage of the slowest request.
+     */
+    onprogress: (progress: number) => void;
   }
 
   var ajax: Ajax;
