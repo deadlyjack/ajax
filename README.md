@@ -1,9 +1,11 @@
-# Very Small XHR library for webpack
+# Very Small XHR
+
+A simple, tiny library to make ajax calls.
 
 ## Usage
 
 ```javascript
-import ajax from 'ajax-js';
+import ajax from '@deadlyjack/ajax';
 
 const options = {
   url: "https://example.com",
