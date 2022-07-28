@@ -39,6 +39,7 @@ declare module '@deadlyjack/ajax' {
      * A callback function with parameter progress i.e. percentage of the slowest request.
      */
     onprogress: (progress: number) => void;
+    response: (xhr: XMLHttpRequest) => object;
   }
 
   var ajax: Ajax;

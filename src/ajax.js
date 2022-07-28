@@ -1,7 +1,8 @@
 let timeout = null;
-const progresses = [];
+let xhrs = [];
 export function ajax(options) {
     const xhr = getHTTP();
+    xhrs.push(xhr);
 
     return new Promise((resolve, reject) => {
         options = options || {};
@@ -29,21 +30,22 @@ export function ajax(options) {
 
         xhr.onprogress = (e) => {
             const { loaded, total } = e;
+            const percent = Math.round(loaded / total * 100);
+            xhr.percent = percent;
 
             if (typeof options.onprogress === 'function') {
                 options.onprogress(loaded, total);
             }
 
             if (typeof ajax.onprogress === 'function') {
-                const percent = Math.floor(loaded / total * 100);
-                progresses.push(percent);
-                if (timeout) return;
+                const progresses = [];
+                xhrs.filter((xhr) => {
+                    if (xhr.status !== 200 || xhr.percent === 100) return false;
+                    progresses.push(xhr.percent);
+                    return true;
+                });
 
-                timeout = setTimeout(() => {
-                    timeout = null;
-                    ajax.onprogress(Math.min(...progresses));
-                    progresses.length = 0;
-                }, 3000);
+                ajax.onprogress(Math.min(...progresses, 100));
             }
 
         }
@@ -76,7 +78,13 @@ export function ajax(options) {
                 if (options.onsuccess) {
                     options.onsuccess(xhr.response);
                 }
-                resolve(xhr);
+
+                let res = xhr;
+                if (typeof ajax.response === 'function') {
+                    res = ajax.response(xhr);
+                }
+
+                resolve(res);
             } else {
                 reject(xhr);
             }
