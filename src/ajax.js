@@ -1,45 +1,83 @@
 let timeout = null;
 let xhrs = [];
-export function ajax(options) {
+export function ajax(options = {}) {
     const xhr = getHTTP();
-    xhrs.push(xhr);
+
+    const {
+        contentType = 'application/json',
+        responseType = ajax.responseType || 'json',
+        method = 'get',
+        onprogress = () => { },
+        onsuccess = () => { },
+        onerror = () => { },
+        onload = () => { },
+        onloadend = () => { },
+        onabort = () => { },
+        ontimeout = () => { },
+        configure = () => { },
+        mimeType = 'text/xml',
+        data,
+        url,
+    } = options;
 
     return new Promise((resolve, reject) => {
-        options = options || {};
+        let body;
 
-        const contentType = options.contentType || 'application/json';
-        const method = options.method === undefined ? 'get' : options.method;
-        const url = options.url;
-
-        options.responseType = options.responseType === undefined ? 'json' : options.responseType;
-        options.serialize = options.serialize === undefined ? true : options.serialize;
-        options.onsuccess = options.onsuccess || callback;
-        options.onload = options.onload || callback;
-        options.onerror = options.onerror || callback;
-
-        let data = options.serialize ? serialize(options.data) : options.data;
-
-        if (options.data && contentType === 'application/json') {
-            data = JSON.stringify(options.data);
+        if (data && contentType === 'application/json') {
+            body = JSON.stringify(data);
         }
 
-        xhr.open(method, url, true);
-        xhr.responseType = options.responseType;
-        xhr.setRequestHeader("Content-Type", contentType);
-        if (options.xhr) options.xhr(xhr);
+        xhr.addEventListener('load', onload);
+        xhr.addEventListener('abort', onabort);
+        xhr.addEventListener('loadend', onloadend);
+        xhr.addEventListener('timeout', ontimeout);
+        xhr.addEventListener('progress', progress);
+        xhr.addEventListener('error', handleError);
+        xhr.addEventListener('readystatechange', onreadystatechange);
 
-        xhr.onprogress = (e) => {
+        xhr.open(method, url, true);
+        xhr.setRequestHeader("Content-Type", contentType);
+        xhr.overrideMimeType(mimeType);
+        configure(xhr);
+        xhr.send(body);
+
+        function onreadystatechange() {
+            const { readyState, status } = xhr;
+
+            if (readyState === 2) {
+                if (status >= 200 && status < 300) {
+                    xhr.responseType = responseType;
+                } else {
+                    xhr.responseType = 'text';
+                }
+            } else if (readyState === 4) {
+                if (status >= 200 && status < 300) {
+                    let res = xhr;
+
+                    if (typeof ajax.response === 'function') {
+                        res = ajax.response(res);
+                    }
+
+                    onsuccess(res);
+                    resolve(res);
+                } else {
+                    handleError();
+                }
+            }
+        }
+
+        function progress(e) {
             const { loaded, total } = e;
             const percent = Math.round(loaded / total * 100);
             xhr.percent = percent;
 
-            if (typeof options.onprogress === 'function') {
-                options.onprogress(loaded, total);
+            if (typeof onprogress === 'function') {
+                onprogress(loaded, total);
             }
 
             if (typeof ajax.onprogress === 'function') {
                 const progresses = [];
-                xhrs.filter((xhr) => {
+                xhrs = xhrs.filter((xhr) => {
                     if (xhr.status !== 200 || xhr.percent === 100) return false;
                     progresses.push(xhr.percent);
                     return true;
@@ -47,80 +85,42 @@ export function ajax(options) {
 
                 ajax.onprogress(Math.min(...progresses, 100));
             }
-
         }
 
-        xhr.send(data);
+        function handleError() {
+            let res = xhr;
 
-        xhr.onerror = function (e) {
-            if (options.onerror) options.onerror(e);
-            reject(e);
-        };
-
-        if (options.onloadend) {
-            xhr.addEventListener('loadend', options.onloadend);
-        }
-        if (options.onload) {
-            xhr.addEventListener('load', options.onload);
-        }
-        if (options.onerror) {
-            xhr.addEventListener('error', options.onerror);
-        }
-
-        xhr.addEventListener('readystatechange', function () {
-
-            if (xhr.readyState !== 4) {
-                if (xhr.status > 300) reject(xhr);
-                return;
+            if (responseType === 'json') {
+                Object.defineProperty(xhr, 'response', {
+                    value: JSON.parse(xhr.responseText),
+                });
             }
 
-            if ((xhr.status >= 200 && xhr.status < 300) || xhr.status === 0) {
-                if (options.onsuccess) {
-                    options.onsuccess(xhr.response);
-                }
-
-                let res = xhr;
-                if (typeof ajax.response === 'function') {
-                    res = ajax.response(xhr);
-                }
-
-                resolve(res);
-            } else {
-                reject(xhr);
+            if (typeof ajax.response === 'function') {
+                res = ajax.response(xhr);
             }
 
-        });
+            onerror(res);
+            reject(res);
+        }
     });
 
     /**
-     * @returns {XMLHttpRequest}
-     */
+    * @returns {XMLHttpRequest}
+    */
     function getHTTP() {
+        let xhr;
         if (XMLHttpRequest) {
-            return new XMLHttpRequest();
+            xhr = new XMLHttpRequest();
         } else if (ActiveXObject) {
-            return new ActiveXObject("Microsoft.XMLHTTP");
+            xhr = new ActiveXObject("Microsoft.XMLHTTP");
         }
-    }
 
-    /**
-     * @param {object} data 
-     */
-    function serialize(data) {
-        if (!data) return;
-        const keys = Object.keys(data);
-        let serial = "";
-        keys.map((key, index) => {
-            serial += key + (data[key] ? ("=" + data[key]) : '') + (index < keys.length - 1 ? '&' : '');
-        });
-
-        return encodeURI(serial);
-    }
-
-    function callback(param) {
-        return param;
+        xhrs.push(xhr);
+        return xhr;
     }
 }
+
 
 ajax.get = function (url, options = {}) {
     return ajax({

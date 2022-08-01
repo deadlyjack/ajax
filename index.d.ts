@@ -15,16 +15,14 @@ declare module '@deadlyjack/ajax' {
       | 'application/json'
       | 'application/x-www-form-urlencoded'
       | 'multipart/form-data';
-    /**
-     * Wheater to serialze the given data or not. Default value of serialize id true.
-     */
-    serialize: boolean;
     onsuccess: (xhr: XMLHttpRequest) => void;
     onload: (xhr: XMLHttpRequest) => void;
     onerror: (xhr: XMLHttpRequest) => void;
     onloadend: (xhr: XMLHttpRequest) => void;
+    ontimeout: (xhr: XMLHttpRequest) => void;
     onprogress: (progress: number, total: number) => void;
-    xhr: (xhr: XMLHttpRequest) => void;
+    configure: (xhr: XMLHttpRequest) => void;
+    mimeType: string;
   }
   interface Ajax {
     (options: AjaxOptions): Promise<XMLHttpRequest | object>;
@@ -40,6 +38,7 @@ declare module '@deadlyjack/ajax' {
      */
     onprogress: (progress: number) => void;
     response: (xhr: XMLHttpRequest) => object;
+    responseType: string;
   }
 
   var ajax: Ajax;
