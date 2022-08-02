@@ -91,8 +91,16 @@ export function ajax(options = {}) {
             let res = xhr;
 
             if (responseType === 'json') {
+                let json;
+
+                try {
+                    json = JSON.parse(xhr.responseText);
+                } catch (error) {
+                    json = xhr.responseText;
+                }
+
                 Object.defineProperty(xhr, 'response', {
-                    value: JSON.parse(xhr.responseText),
+                    value: json,
                 });
             }
 
