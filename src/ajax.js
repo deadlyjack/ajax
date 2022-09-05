@@ -1,6 +1,6 @@
 const GET = 'GET';
 const POST = 'POST';
-const PATCH = 'PATH';
+const PATCH = 'PATCH';
 const PUT = 'PUT';
 const DELETE = 'DELETE';
 const PURGE = 'PURGE';
