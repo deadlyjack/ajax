@@ -1,4 +1,10 @@
-let timeout = null;
+const GET = 'GET';
+const POST = 'POST';
+const PATCH = 'PATH';
+const PUT = 'PUT';
+const DELETE = 'DELETE';
+const PURGE = 'PURGE';
+
 let xhrs = [];
 export function ajax(options = {}) {
     const xhr = getHTTP();
@@ -6,7 +12,7 @@ export function ajax(options = {}) {
     const {
         contentType = 'application/json',
         responseType = ajax.responseType || 'json',
-        method = 'get',
+        method = GET,
         onprogress = () => { },
         onsuccess = () => { },
         onerror = () => { },
@@ -133,7 +139,7 @@ export function ajax(options = {}) {
 ajax.get = function (url, options = {}) {
     return ajax({
         url,
-        method: 'get',
+        method: GET,
         ...options
     });
 }
@@ -141,7 +147,7 @@ ajax.get = function (url, options = {}) {
 ajax.post = function (url, options = {}) {
     return ajax({
         url,
-        method: 'post',
+        method: POST,
         ...options
     });
 }
@@ -149,7 +155,7 @@ ajax.post = function (url, options = {}) {
 ajax.put = function (url, options = {}) {
     return ajax({
         url,
-        method: 'put',
+        method: PUT,
         ...options
     });
 }
@@ -157,7 +163,7 @@ ajax.put = function (url, options = {}) {
 ajax.patch = function (url, options = {}) {
     return ajax({
         url,
-        method: 'patch',
+        method: PATCH,
         ...options
     });
 }
@@ -165,7 +171,7 @@ ajax.patch = function (url, options = {}) {
 ajax.delete = function (url, options = {}) {
     return ajax({
         url,
-        method: 'delete',
+        method: DELETE,
         ...options
     });
 }
@@ -173,7 +179,7 @@ ajax.delete = function (url, options = {}) {
 ajax.purge = function (url, options = {}) {
     return ajax({
         url,
-        method: 'purge',
+        method: PURGE,
         ...options
     });
 }
